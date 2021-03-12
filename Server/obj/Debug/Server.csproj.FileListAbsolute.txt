@@ -1,0 +1,7 @@
+D:\ШАГ\NetWork-programming\dz\dz2\Server\Server\bin\Debug\Server.exe.config
+D:\ШАГ\NetWork-programming\dz\dz2\Server\Server\bin\Debug\Server.exe
+D:\ШАГ\NetWork-programming\dz\dz2\Server\Server\bin\Debug\Server.pdb
+D:\ШАГ\NetWork-programming\dz\dz2\Server\Server\obj\Debug\Server.csprojAssemblyReference.cache
+D:\ШАГ\NetWork-programming\dz\dz2\Server\Server\obj\Debug\Server.csproj.CoreCompileInputs.cache
+D:\ШАГ\NetWork-programming\dz\dz2\Server\Server\obj\Debug\Server.exe
+D:\ШАГ\NetWork-programming\dz\dz2\Server\Server\obj\Debug\Server.pdb

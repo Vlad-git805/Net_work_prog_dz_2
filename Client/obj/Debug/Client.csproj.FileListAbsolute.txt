@@ -1,0 +1,15 @@
+D:\ШАГ\NetWork-programming\dz\dz2\Server\Client\bin\Debug\Client.exe.config
+D:\ШАГ\NetWork-programming\dz\dz2\Server\Client\bin\Debug\Client.exe
+D:\ШАГ\NetWork-programming\dz\dz2\Server\Client\bin\Debug\Client.pdb
+D:\ШАГ\NetWork-programming\dz\dz2\Server\Client\obj\Debug\Client.csprojAssemblyReference.cache
+D:\ШАГ\NetWork-programming\dz\dz2\Server\Client\obj\Debug\MainWindow.g.cs
+D:\ШАГ\NetWork-programming\dz\dz2\Server\Client\obj\Debug\App.g.cs
+D:\ШАГ\NetWork-programming\dz\dz2\Server\Client\obj\Debug\Client_MarkupCompile.cache
+D:\ШАГ\NetWork-programming\dz\dz2\Server\Client\obj\Debug\Client_MarkupCompile.lref
+D:\ШАГ\NetWork-programming\dz\dz2\Server\Client\obj\Debug\MainWindow.baml
+D:\ШАГ\NetWork-programming\dz\dz2\Server\Client\obj\Debug\Client.g.resources
+D:\ШАГ\NetWork-programming\dz\dz2\Server\Client\obj\Debug\Client.Properties.Resources.resources
+D:\ШАГ\NetWork-programming\dz\dz2\Server\Client\obj\Debug\Client.csproj.GenerateResource.cache
+D:\ШАГ\NetWork-programming\dz\dz2\Server\Client\obj\Debug\Client.csproj.CoreCompileInputs.cache
+D:\ШАГ\NetWork-programming\dz\dz2\Server\Client\obj\Debug\Client.exe
+D:\ШАГ\NetWork-programming\dz\dz2\Server\Client\obj\Debug\Client.pdb

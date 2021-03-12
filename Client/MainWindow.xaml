@@ -1,0 +1,53 @@
+﻿<Window x:Class="Client.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Client"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Grid.Row="0">
+            <Label>Enter Name</Label>
+            <TextBox Width="200" Name="nameBox"></TextBox>
+            <Label>Enter Password</Label>
+            <TextBox Width="200" Name="passwordBox"></TextBox>
+            <Button Name="login_button" Width="100" Margin="5" Click="Login_button_Click">Login</Button>
+            <Button Name="reg_button" Width="100" Margin="5" Click="Reg_button_Click">Reg</Button>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="1">
+            <Label>Select your valute:</Label>
+            <Label Name="USD_my_val_leble">USD</Label>
+            <RadioButton GroupName="my_valute" Margin="7" Name="USD_my_val"></RadioButton>
+            <Label Name="EUR_my_val_leble">EUR</Label>
+            <RadioButton GroupName="my_valute" Margin="7"  Name="EUR_my_val"></RadioButton>
+            <Label Name="RUB_my_val_leble">RUB</Label>
+            <RadioButton GroupName="my_valute" Margin="7"  Name="RUB_my_val"></RadioButton>
+            <Label Name="Grn_my_val_leble">BTC</Label>
+            <RadioButton GroupName="my_valute" Margin="7" Name="GRN_my_val"></RadioButton>
+            <Label>Enter count of your valute:</Label>
+            <TextBox Width="200" Name="portBox">1</TextBox>
+        </StackPanel>
+        <DockPanel Grid.Row="2">
+            <Label>Select valute to convert:</Label>
+            <Button Click="Button_Click" Width="100" DockPanel.Dock="Right">Send</Button>
+            <Label Name="USD_conv_val_leble">USD</Label>
+            <RadioButton GroupName="convert_valute" Margin="7"  Name="USD_convert_val"></RadioButton>
+            <Label Name="EUR_conv_val_leble">EUR</Label>
+            <RadioButton GroupName="convert_valute" Margin="7" Name="EUR_convert_val"></RadioButton>
+            <Label Name="RUB_conv_val_leble">RUB</Label>
+            <RadioButton GroupName="convert_valute" Margin="7" Name="RUB_convert_val"></RadioButton>
+            <Label Name="Grn_conv_val_leble">BTC</Label>
+            <RadioButton GroupName="convert_valute" Margin="7"  Name="Grn_convert_val"></RadioButton>
+        </DockPanel>
+        <ListBox Margin="20" Grid.Row="3" Name="list">
+
+        </ListBox>
+    </Grid>
+</Window>
