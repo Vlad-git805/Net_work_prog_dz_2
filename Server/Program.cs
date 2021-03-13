@@ -76,123 +76,131 @@ namespace Server
 
             try
             {
-
-                //while (true)
-                //{
-                // получаем сообщение
-                StringBuilder builder = new StringBuilder();
-                int bytes = 0; // количество полученных байтов
-                byte[] data = new byte[256]; // буфер для получаемых данных
-
-                do
+                int count = 0;
+                while (true)
                 {
-                    bytes = handler.Receive(data);
-                    builder.Append(Encoding.Unicode.GetString(data, 0, bytes));
-                }
-                while (handler.Available > 0);
+                    // получаем сообщение
+                    StringBuilder builder = new StringBuilder();
+                    int bytes = 0; // количество полученных байтов
+                    byte[] data = new byte[256]; // буфер для получаемых данных
 
-                //Console.WriteLine(DateTime.Now.ToShortTimeString() + ": " + builder.ToString());
-                string inf_for_server = "";
-
-                string message_from_client = builder.ToString();
-
-                char[] wordsSplit = new char[] { ' ', ',', '!', '?', '.' };
-                string[] words = message_from_client.Split(wordsSplit, StringSplitOptions.RemoveEmptyEntries);
-                if (words[0] == "<reg>")
-                {
-                    string name = words[1];
-                    string pass = words[2];
-                    Persons pers = new Persons(name, pass);
-                    persons.Add(pers);
-
-                    data = Encoding.Unicode.GetBytes("You regist acc");
-                    handler.Send(data);
-                }
-                else if (words[0] == "<login>")
-                {
-                    string name = words[1];
-                    string pass = words[2];
-                    bool ok = false;
-                    foreach (var item in persons)
+                    do
                     {
-                        if(item.Name == name && item.Password == pass)
-                        {
-                            ok = true;
-                            break;
-                        }
+                        bytes = handler.Receive(data);
+                        builder.Append(Encoding.Unicode.GetString(data, 0, bytes));
                     }
-                    if(ok == true)
+                    while (handler.Available > 0);
+
+                    //Console.WriteLine(DateTime.Now.ToShortTimeString() + ": " + builder.ToString());
+                    string inf_for_server = "";
+
+                    string message_from_client = builder.ToString();
+
+                    char[] wordsSplit = new char[] { ' ', ',', '!', '?', '.' };
+                    string[] words = message_from_client.Split(wordsSplit, StringSplitOptions.RemoveEmptyEntries);
+                    if (words[0] == "<reg>")
                     {
-                        data = Encoding.Unicode.GetBytes("You login in acc");
+                        string name = words[1];
+                        string pass = words[2];
+                        Persons pers = new Persons(name, pass);
+                        persons.Add(pers);
+
+                        data = Encoding.Unicode.GetBytes("You regist acc");
                         handler.Send(data);
+                    }
+                    else if (words[0] == "<login>")
+                    {
+                        string name = words[1];
+                        string pass = words[2];
+                        bool ok = false;
+                        foreach (var item in persons)
+                        {
+                            if (item.Name == name && item.Password == pass)
+                            {
+                                ok = true;
+                                break;
+                            }
+                        }
+                        if (ok == true)
+                        {
+                            data = Encoding.Unicode.GetBytes("You login in acc");
+                            handler.Send(data);
+                        }
+                        else
+                        {
+                            data = Encoding.Unicode.GetBytes("Error, reg your acc");
+                            handler.Send(data);
+                        }
                     }
                     else
                     {
-                        data = Encoding.Unicode.GetBytes("Error, reg your acc");
+
+                        int select = int.Parse(words[0]);
+                        int select2 = int.Parse(words[2]);
+                        int count_your_valute = int.Parse(words[1]);
+
+                        if (select == 1)
+                            inf_for_server += "USD";
+                        if (select == 2)
+                            inf_for_server += "EUR";
+                        if (select == 3)
+                            inf_for_server += "RUB";
+                        if (select == 4)
+                            inf_for_server += "BTC";
+
+                        inf_for_server += " " + count_your_valute.ToString() + " to ";
+
+                        if (select2 == 1)
+                            inf_for_server += "USD";
+                        if (select2 == 2)
+                            inf_for_server += "EUR";
+                        if (select2 == 3)
+                            inf_for_server += "RUB";
+                        if (select2 == 4)
+                            inf_for_server += "BTC";
+
+                        Console.WriteLine(handler.RemoteEndPoint + DateTime.Now.ToShortTimeString() + ":  " + inf_for_server);
+
+                        decimal price_your_valute = 0;
+                        decimal price_convert_valute = 0;
+
+                        int f = 0;
+                        foreach (XmlNode xNode in xNodelst)
+                        {
+
+                            f++;
+                            if (f == select)
+                            {
+                                string str = xNode.SelectSingleNode("exchangerate").SelectSingleNode("@buy").Value;
+                                price_your_valute = decimal.Parse(str, CultureInfo.InvariantCulture);
+                            }
+                            if (f == select2)
+                            {
+                                string str = xNode.SelectSingleNode("exchangerate").SelectSingleNode("@buy").Value;
+                                price_convert_valute = decimal.Parse(str, CultureInfo.InvariantCulture);
+                            }
+                        }
+
+                        decimal result = 0;
+                        price_your_valute = price_your_valute * count_your_valute;
+                        result = price_your_valute / price_convert_valute;
+                        //Console.WriteLine(result);
+
+                        // отправляем ответ
+                        if (count >= 5)
+                        {
+                            data = Encoding.Unicode.GetBytes("There are 5 operations!");
+                            handler.Send(data);
+                            break;
+                        }
+                        data = Encoding.Unicode.GetBytes(result.ToString());
                         handler.Send(data);
+                       
+                        count++;
+                        // закрываем сокет
+                        //}
                     }
                 }
-                else
-                {
-
-                    int select = int.Parse(words[0]);
-                    int select2 = int.Parse(words[2]);
-                    int count_your_valute = int.Parse(words[1]);
-
-                    if (select == 1)
-                        inf_for_server += "USD";
-                    if (select == 2)
-                        inf_for_server += "EUR";
-                    if (select == 3)
-                        inf_for_server += "RUB";
-                    if (select == 4)
-                        inf_for_server += "BTC";
-
-                    inf_for_server += " " + count_your_valute.ToString() + " to ";
-
-                    if (select2 == 1)
-                        inf_for_server += "USD";
-                    if (select2 == 2)
-                        inf_for_server += "EUR";
-                    if (select2 == 3)
-                        inf_for_server += "RUB";
-                    if (select2 == 4)
-                        inf_for_server += "BTC";
-
-                    Console.WriteLine(handler.RemoteEndPoint + DateTime.Now.ToShortTimeString() + ":  " + inf_for_server);
-
-                    decimal price_your_valute = 0;
-                    decimal price_convert_valute = 0;
-
-                    int f = 0;
-                    foreach (XmlNode xNode in xNodelst)
-                    {
-
-                        f++;
-                        if (f == select)
-                        {
-                            string str = xNode.SelectSingleNode("exchangerate").SelectSingleNode("@buy").Value;
-                            price_your_valute = decimal.Parse(str, CultureInfo.InvariantCulture);
-                        }
-                        if (f == select2)
-                        {
-                            string str = xNode.SelectSingleNode("exchangerate").SelectSingleNode("@buy").Value;
-                            price_convert_valute = decimal.Parse(str, CultureInfo.InvariantCulture);
-                        }
-                    }
-
-                    decimal result = 0;
-                    price_your_valute = price_your_valute * count_your_valute;
-                    result = price_your_valute / price_convert_valute;
-                    //Console.WriteLine(result);
-
-                    // отправляем ответ
-                    data = Encoding.Unicode.GetBytes(result.ToString());
-                    handler.Send(data);
-                    // закрываем сокет
-                    //}
-                }
-
             }
             catch (Exception ex)
             {

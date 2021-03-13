@@ -19,11 +19,19 @@ namespace Client
 {
     public partial class MainWindow : Window
     {
-        string ipAddress = "127.0.0.1";
-        int port = 8080;
+        static string ipAddress = "127.0.0.1";
+        static int port = 8080;
+
+        IPEndPoint ipPoint = new IPEndPoint(IPAddress.Parse(ipAddress), port);
+
+        Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+        // подключаемся к удаленному хосту
+        
         public MainWindow()
         {
             InitializeComponent();
+            socket.Connect(ipPoint);
         }
 
         bool is_allow_work = false;
@@ -84,54 +92,53 @@ namespace Client
         public void Send_message(string str)
         {
             if (string.IsNullOrWhiteSpace(str)) return;
-
-            IPEndPoint ipPoint = new IPEndPoint(IPAddress.Parse(ipAddress), port);
-
-            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-            // подключаемся к удаленному хосту
-            socket.Connect(ipPoint);
-
-
-
-            byte[] data = Encoding.Unicode.GetBytes(str);
-            socket.Send(data);
-
-            // получаем ответ
-            data = new byte[256]; // буфер для ответа
-            StringBuilder builder = new StringBuilder();
-            int bytes = 0; // количество полученных байт
-
-            do
+            try
             {
-                bytes = socket.Receive(data, data.Length, 0);
-                builder.Append(Encoding.Unicode.GetString(data, 0, bytes));
-            }
-            while (socket.Available > 0);
 
-            if(builder.ToString() == "You regist acc")
-            {
-                list.Items.Add(builder.ToString());
-            }
+                byte[] data = Encoding.Unicode.GetBytes(str);
+                socket.Send(data);
 
-            if (builder.ToString() == "Error, reg your acc")
-            {
-                list.Items.Add(builder.ToString());
-            }
+                // получаем ответ
+                data = new byte[256]; // буфер для ответа
+                StringBuilder builder = new StringBuilder();
+                int bytes = 0; // количество полученных байт
 
-            if (builder.ToString() == "You login in acc")
-            {
-                is_allow_work = true;
-            }
+            
+                do
+                {
+                    bytes = socket.Receive(data, data.Length, 0);
+                    builder.Append(Encoding.Unicode.GetString(data, 0, bytes));
+                }
+                while (socket.Available > 0);
 
-            if (is_allow_work == true)
-            {
-                list.Items.Add(builder.ToString());
+                if (builder.ToString() == "You regist acc")
+                {
+                    list.Items.Add(builder.ToString());
+                }
+
+                if (builder.ToString() == "Error, reg your acc")
+                {
+                    list.Items.Add(builder.ToString());
+                }
+
+                if (builder.ToString() == "You login in acc")
+                {
+                    is_allow_work = true;
+                }
+
+                if (is_allow_work == true)
+                {
+                    list.Items.Add(builder.ToString());
+                }
             }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            
 
             // закрываем сокет
-            socket.Shutdown(SocketShutdown.Both);
-            socket.Close();
+            
         }
 
         private void Login_button_Click(object sender, RoutedEventArgs e)
@@ -150,6 +157,12 @@ namespace Client
                 string str = "<reg> " + nameBox.Text + " " + passwordBox.Text;
                 Send_message(str);
             }
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            socket.Shutdown(SocketShutdown.Both);
+            socket.Close();
         }
     }
 }
